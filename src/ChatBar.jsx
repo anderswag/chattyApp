@@ -7,7 +7,8 @@ class ChatBar extends Component {
     this.state = {
       type:"",
       username: "Anon",
-      content: ""
+      content: "",
+      olduser:""
     };
 
     this.handleChange = this.handleChange.bind(this);
@@ -25,17 +26,22 @@ class ChatBar extends Component {
   handleKeyupUser(event) {
     if (event.keyCode === 13) {
       if(this.state.username !== event.target.value){
-        this.setState({username:event.target.value, type:'postNotification'});
-        this.props.onSend(this.state);
+        this.setState({
+          olduser:this.state.username,
+          username:event.target.value,
+          type:'postNotification'
+        },function whenFinished(){
+          this.props.onSend(this.state);
+        });
       }
     }
   }
   handleKeyup(event) {
     if (event.keyCode === 13) { // on entered
-      this.setState({type:'postMessage'})
-      this.props.onSend(this.state); // get the custom props function and call it with state
-      this.setState({content:''}); // sets the content state back to an empty string
-      /*this.refs.userfield.value="";*/
+      this.setState({type:'postMessage'}, ()=>{
+        this.props.onSend(this.state); // get the custom props function and call it with state
+        this.setState({content:''}); // sets the content state back to an empty string
+      })
       this.refs.contentfield.value="";
     }
   }
