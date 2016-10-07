@@ -8,7 +8,8 @@ class App extends Component {
     super(props);
     this.state =  {
       numUsers: '', // optional. if currentUser is not defined, it means the user is Anonymous
-      messages: []
+      messages: [],
+      color:''
     };
 
     this.sendMessage = this.sendMessage.bind(this)
@@ -25,6 +26,7 @@ class App extends Component {
       this.socket.send(JSON.stringify(message));
       //Waiting to recieve data from the server
       this.socket.onmessage = (event) => {
+        /*console.log(typeof event.data);*/
         // Store the returned data object inside a variable
         let newState = Object.assign({}, this.state, {
           //event.data is the new created message coming in from the server
@@ -39,7 +41,11 @@ class App extends Component {
     this.socket = new WebSocket("ws://127.0.0.1:4000");
     this.socket.onopen = () => {
       this.socket.onmessage = (event) => {
-        this.setState({numUsers:JSON.parse(event.data)})
+        if(JSON.parse(event.data).type == 'numUsers'){
+          this.setState({numUsers:JSON.parse(event.data).value})
+        } else {
+          this.setState({color:JSON.parse(event.data).value});
+        }
       }
     }
     console.log("ComponentDidMount <App />")
@@ -51,9 +57,9 @@ class App extends Component {
       <div className = "wrapper">
           <nav>
             <h1>Chatty</h1>
-            <h2>{this.state.numUsers} plumbus online</h2>
+            <h4>{this.state.numUsers} plumbus online</h4>
          </nav>
-        <MessageList messages={this.state.messages} />
+        <MessageList messages={this.state.messages} color={this.state.color} />
         <ChatBar onSend={ this.sendMessage } />
       </div>
     );
