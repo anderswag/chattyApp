@@ -42,7 +42,7 @@ class App extends Component {
     this.socket.onopen = () => {
       this.socket.onmessage = (event) => {
         if(JSON.parse(event.data).type == 'numUsers'){
-          this.setState({numUsers:JSON.parse(event.data).value})
+          this.setState({numUsers:JSON.parse(event.data).value});
         } else {
           this.setState({color:JSON.parse(event.data).value});
         }
@@ -50,7 +50,6 @@ class App extends Component {
     }
     console.log("ComponentDidMount <App />")
   }
-
 
   render() {
     return (
