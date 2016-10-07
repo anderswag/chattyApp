@@ -5,7 +5,7 @@ class MessageList extends Component {
     return (
       <div id="message-list">
       {this.props.messages.map((item, index)=>(
-        <Message color={this.props.color} key={index} content={item.content} username={item.username}/>
+        <Message color={item.color} key={index} content={item.content} username={item.username}/>
       ))}
         <div className="message system">
         </div>

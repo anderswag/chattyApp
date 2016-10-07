@@ -21,20 +21,20 @@ class App extends Component {
   //Send message
 
   sendMessage(message) {
-      console.log(message);
-      // Send message to server
-      this.socket.send(JSON.stringify(message));
-      //Waiting to recieve data from the server
-      this.socket.onmessage = (event) => {
-        /*console.log(typeof event.data);*/
-        // Store the returned data object inside a variable
-        let newState = Object.assign({}, this.state, {
-          //event.data is the new created message coming in from the server
-          messages: this.insertNewMessage(this.state.messages, JSON.parse(event.data))
-        })
-        //Sets the new state
-        this.setState(newState);
-      }
+    //Add color to message
+    message['color'] = this.state.color;
+    // Send message to server
+    this.socket.send(JSON.stringify(message));
+    //Waiting to recieve data from the server
+    this.socket.onmessage = (event) => {
+      // Store the returned data object inside a variable
+      let newState = Object.assign({}, this.state, {
+        //event.data is the new created message coming in from the server
+        messages: this.insertNewMessage(this.state.messages, JSON.parse(event.data))
+      })
+      //Sets the new state
+      this.setState(newState);
+    }
   }
 
   componentDidMount() {
@@ -57,9 +57,9 @@ class App extends Component {
       <div className = "wrapper">
           <nav>
             <h1>Chatty</h1>
-            <h4>{this.state.numUsers} plumbus online</h4>
+            <h4>{this.state.numUsers} morties online</h4>
          </nav>
-        <MessageList messages={this.state.messages} color={this.state.color} />
+        <MessageList messages={this.state.messages}/>
         <ChatBar onSend={ this.sendMessage } />
       </div>
     );

@@ -25,23 +25,35 @@ class ChatBar extends Component {
   }*/
   handleKeyupUser(event) {
     if (event.keyCode === 13) {
-      if(this.state.username !== event.target.value){
-        this.setState({
-          olduser:this.state.username,
-          username:event.target.value,
-          type:'postNotification'
-        },function whenFinished(){
-          this.props.onSend(this.state);
-        });
+      if(event.target.value != ''){
+        if(this.state.username !== event.target.value){
+          this.setState({
+            olduser:this.state.username,
+            username:event.target.value,
+            type:'postNotification'
+          },function whenFinished(){
+            this.props.onSend(this.state);
+          });
+        }
       }
     }
   }
   handleKeyup(event) {
-    if (event.keyCode === 13) { // on entered
-      this.setState({type:'postMessage'}, ()=>{
-        this.props.onSend(this.state); // get the custom props function and call it with state
-        this.setState({content:''}); // sets the content state back to an empty string
-      })
+    if (event.keyCode === 13 && (event.target.value != '') && (this.refs.userfield.value != '')) { // on entered
+      if(this.state.username !== this.refs.userfield.value){
+        this.setState({
+          olduser:this.state.username,
+          username:this.refs.userfield.value,
+          type:'postNotification'
+        }, ()=>{
+          this.props.onSend(this.state);
+        })
+      } else {
+        this.setState({type:'postMessage'}, ()=>{
+          this.props.onSend(this.state); // get the custom props function and call it with state
+          this.setState({content:''}); // sets the content state back to an empty string
+        })
+      }
       this.refs.contentfield.value="";
     }
   }
